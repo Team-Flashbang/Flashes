@@ -73,7 +73,7 @@ function printSeparator() {
 
 # Settings
 #DRYRUN=1
-TAG_PREFIX=ghcr.io/team-flashbang/flashes/
+TAG_PREFIX=ghcr.io/Team-Flashbang/Flashes
 TARGET_PLATFORM=linux/arm64
 
 # Exit when something fails

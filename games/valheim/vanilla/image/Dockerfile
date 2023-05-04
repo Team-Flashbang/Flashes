@@ -1,5 +1,9 @@
 FROM --platform=linux/arm64 ghcr.io/team-flashbang/flashes/base/debian:bullseye
+
+# Set Metadata
 LABEL authors="Team Flashbang" maintainer="dev@fb-hosting.net"
+LABEL org.opencontainers.image.source="https://github.com/Team-Flashbang/Flashes"
+RUN date > /build.time # store build time
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -39,9 +43,6 @@ RUN touch ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} && \
     chgrp 0 ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP}  && \
     chmod 777 ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP}
 ADD passwd.template /passwd.template
-
-# Store build date
-RUN date > /build.date
 
 # Configure User
 RUN useradd -m -d /home/container -s /bin/bash container
