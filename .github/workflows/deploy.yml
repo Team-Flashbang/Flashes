@@ -26,5 +26,5 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          password: ${{ GITHUB_TOKEN }}
       - run: ./.github/scripts/deploy.sh
