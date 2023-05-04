@@ -7,7 +7,7 @@ function buildImage() {
     local dryRun=$4
 
     local imageDir=${dockerfile//\Dockerfile/}
-    local fullTag=$(echo "${dockerfile// /-}" | sed 's#\(.*\)/\(.*\)image/Dockerfile#\1:\2#g; s#\(.*\)image/Dockerfile#\1#g' | sed "s#./#$tagPrefix#" )
+    local fullTag=$(echo "${dockerfile// /-}" | sed 's#\(.*\)/\(.*\)/image/Dockerfile#\1:\2#g; s#\(.*\)/image/Dockerfile#\1#g' | sed "s#./#$tagPrefix/#" )
     local shortTag=$(echo "$fullTag" | awk -F'/' '{print $NF}')
 
     # Print info
@@ -54,7 +54,7 @@ function pushDirectory() {
     find "$buildPath" -type f -name 'Dockerfile' -print0 |
     while IFS= read -r -d '' dockerfile;
     do
-      local fullTag=$(echo "${dockerfile// /-}" | sed 's#\(.*\)/\(.*\)image/Dockerfile#\1:\2#g; s#\(.*\)image/Dockerfile#\1#g' | sed "s#./#$tagPrefix#" )
+      local fullTag=$(echo "${dockerfile// /-}" | sed 's#\(.*\)/\(.*\)/image/Dockerfile#\1:\2#g; s#\(.*\)/image/Dockerfile#\1#g' | sed "s#./#$tagPrefix/#" )
 
       docker push "$fullTag"
 
