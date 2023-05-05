@@ -3,7 +3,7 @@ cd /home/container || exit 1
 
 # Print container Info
 echo ""
-echo "This container was build on $(cat /build.date)"
+echo "This container was build on $(cat /build.time)"
 echo ""
 
 # Make internal Docker IP address available to processes.
