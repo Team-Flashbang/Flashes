@@ -2,7 +2,7 @@ FROM --platform=linux/arm64 debian:bullseye-slim
 
 # Set Metadata
 LABEL authors="Team Flashbang" maintainer="dev@fb-hosting.net"
-LABEL org.opencontainers.image.source="https://github.com/Team-Flashbang/Flashes"
+LABEL org.opencontainers.image.source "https://github.com/Team-Flashbang/Flashes"
 RUN date > /build.time # store build time
 
 ENV DEBIAN_FRONTEND noninteractive
