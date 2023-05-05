@@ -35,6 +35,10 @@ jobs:
           file: ./base/${{ env.IMAGE_PATH }}/image/Dockerfile
           platforms: linux/arm64
           push: true
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.description="Base: ${{ matrix.image }}"
+            org.opencontainers.image.licenses=GPL-3.0-or-later
           tags: |
             ghcr.io/team-flashbang/flashes/base/${{ matrix.image }}
 
@@ -66,5 +70,9 @@ jobs:
           file: ./games/${{ env.IMAGE_PATH }}/image/Dockerfile
           platforms: linux/arm64
           push: true
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.description="Game: ${{ matrix.image }}"
+            org.opencontainers.image.licenses=GPL-3.0-or-later
           tags: |
             ghcr.io/team-flashbang/flashes/games/${{ matrix.image }}
