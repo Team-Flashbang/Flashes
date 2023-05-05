@@ -67,4 +67,4 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            ghcr.io/team-flashbang/flashes/base/${{ matrix.image }}
+            ghcr.io/team-flashbang/flashes/games/${{ matrix.image }}

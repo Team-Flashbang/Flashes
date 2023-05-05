@@ -2,6 +2,11 @@
 Flashes is a collection of Yolks and Eggs for Pterodactyl, organized in this repository, 
 with Docker images generated automatically using GitHub Actions.
 
+## Important
+All our image primarily target <b>linux/arm64</b> systems. 
+If you build the images yourself, they may also work on other systems but this is not a scenario we intended to use the images for.
+This may change in the future, but currently all our images are build for <b>arm64</b>.
+
 ## Project Structure
 Our repository includes Eggs and Yolks for different games, with a directory structure similar to this:
 ```
