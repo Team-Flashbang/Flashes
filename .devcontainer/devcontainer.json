@@ -1,8 +1,6 @@
 {
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {},
-  "postCreateCommand": [
-    "docker run --privileged --rm tonistiigi/binfmt --install all",
-    "docker run --privileged --rm tonistiigi/binfmt --install arm64,riscv64,arm"
-  ]
+  "postCreateCommand": "docker run --privileged --rm tonistiigi/binfmt --install all; docker run --privileged --rm tonistiigi/binfmt --install arm64,riscv64,arm",
+  "postAttachCommand": "docker run --privileged --rm tonistiigi/binfmt --install all; docker run --privileged --rm tonistiigi/binfmt --install arm64,riscv64,arm"
 }
