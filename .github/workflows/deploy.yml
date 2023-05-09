@@ -51,6 +51,7 @@ jobs:
       matrix:
         image:
           - valheim:vanilla
+          - core-keeper:vanilla
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
