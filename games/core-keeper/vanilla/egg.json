@@ -1,0 +1,102 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2023-05-09T19:12:49+02:00",
+    "name": "Vanilla",
+    "author": "support@fb-hosting.net",
+    "description": "Vanilla version of the game without any changes.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/team-flashbang\/flashes\/games\/core-keeper:vanilla": "ghcr.io\/team-flashbang\/flashes\/games\/core-keeper:vanilla"
+    },
+    "file_denylist": [],
+    "startup": "mkdir $(dirname {{LOG_FILE}}); touch {{LOG_FILE}}; xvfb-run -s \"-screen 0 1x1x24 -ac -nolisten tcp -nolisten unix\" box64 .\/CoreKeeperServer -batchmode -logfile {{LOG_FILE}} -world {{WORLD_INDEX}} -worldname {{SERVER_NAME}} -worldseed {{WORLD_SEED}} -maxplayers {{MAX_PLAYERS}} -worldmode {{HARDMODE}} -port {{SERVER_PORT}} & CKPID=$!; tail -f {{LOG_FILE}} | grep -e '^[userid:[0-9]*] player' -e '^[^[]' & LOGPID=$!; trap \"kill ${CKPID}; wait ${CKPID}; kill ${LOGPID}; wait ${LOGPID}\" 15; wait $!",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Started session\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n\r\nexport APP=1963720\r\nexport TARGET=\/mnt\/server\r\n\r\n# Download requirements...\r\napt update\r\napt install -y --no-install-recommends \\\r\n  ca-certificates \\\r\n  locales \\\r\n  curl \\\r\n  gpg\r\n\r\n# Install Box64\r\ncurl -o \/etc\/apt\/sources.list.d\/box64.list -L https:\/\/ryanfortner.github.io\/box64-debs\/box64.list\r\ncurl -sSL https:\/\/ryanfortner.github.io\/box64-debs\/KEY.gpg | gpg --dearmor -o \/etc\/apt\/trusted.gpg.d\/box64-debs-archive-keyring.gpg\r\napt update\r\napt install -y -qq --no-install-recommends box64\r\n\r\n# Install Box86\r\ndpkg --add-architecture armhf\r\ncurl -o \/etc\/apt\/sources.list.d\/box86.list -L https:\/\/itai-nelken.github.io\/weekly-box86-debs\/debian\/box86.list\r\ncurl -sSL https:\/\/itai-nelken.github.io\/weekly-box86-debs\/debian\/KEY.gpg | gpg --dearmor -o \/etc\/apt\/trusted.gpg.d\/box86-debs-archive-keyring.gpg\r\napt update\r\napt install -y -qq --no-install-recommends \\\r\n  libc6:armhf \\\r\n  box86:armhf\r\n\r\n# Set the locale\r\nexport LANG=en_US.UTF-8\r\nexport LANGUAGE=en_US:en\r\nexport LC_ALL=en_US.UTF-8\r\nsed -i '\/en_US.UTF-8\/s\/^# \/\/g' \/etc\/locale.gen\r\nlocale-gen\r\n\r\n# Download and install SteamCMD\r\nmkdir \/opt\/valve\r\ncurl -sSL https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz | tar zxvf - -C \/opt\/valve\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n\r\n# Install Game\r\nDEBUGGER=box86 \/opt\/valve\/steamcmd.sh +quit\r\nDEBUGGER=box64 \/opt\/valve\/steamcmd.sh \\\r\n  +force_install_dir $TARGET \\\r\n  +login anonymous \\\r\n  +app_update $APP validate \\\r\n  +quit\r\n\r\n# Update 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v \/opt\/valve\/linux32\/steamclient.so \/mnt\/server\/.steam\/sdk32\/steamclient.so\r\n\r\n# Update 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v \/opt\/valve\/linux64\/steamclient.so \/mnt\/server\/.steam\/sdk64\/steamclient.so\r\n\r\necho \"Nice! A wild Core Keeper Server appeared.\"",
+            "container": "debian:bullseye",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Name",
+            "description": "The name to use for the server.",
+            "env_variable": "SERVER_NAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:60",
+            "field_type": "text"
+        },
+        {
+            "name": "World Seed",
+            "description": "The seed to use for a new world. Set to 0 to generate random seed.",
+            "env_variable": "WORLD_SEED",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:0",
+            "field_type": "text"
+        },
+        {
+            "name": "Game Id",
+            "description": "Game ID to use for the server. Needs to be at least 28 characters and alphanumeric, excluding Y,y,x,0,O. Empty or not valid means a new ID will be generated at start.",
+            "env_variable": "GAME_ID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "regex:\/^[a-zA-Z0-9]{6,}$\/",
+            "field_type": "text"
+        },
+        {
+            "name": "Maximum Players",
+            "description": "Maximum number of players that will be allowed to connect to server.",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "25",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:1",
+            "field_type": "text"
+        },
+        {
+            "name": "Enable Hardmode",
+            "description": "Whether to use normal (0) or hard (1) mode for world.",
+            "env_variable": "HARDMODE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Log File",
+            "description": "",
+            "env_variable": "LOG_FILE",
+            "default_value": "\/tmp\/CoreKeeperLog.log",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "World Index",
+            "description": "Which world index to use.",
+            "env_variable": "WORLD_INDEX",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:0",
+            "field_type": "text"
+        }
+    ]
+}
