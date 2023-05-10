@@ -10,9 +10,16 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN dpkg --add-architecture i386 && \
     dpkg --add-architecture armhf && \
     apt update && \
-    apt upgrade -y
-
-
+    apt upgrade -y && \
+    apt install -y --no-install-recommends \
+        cmake \
+        unzip \
+        git \
+        gcc \
+        g++ \
+        build-essential \
+        ca-certificates \
+        curl
 
 # Configure User
 RUN useradd -m -d /home/container -s /bin/bash container
