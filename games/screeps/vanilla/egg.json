@@ -1,0 +1,42 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2023-05-13T05:07:06+02:00",
+    "name": "Vanilla",
+    "author": "support@fb-hosting.net",
+    "description": "Screeps: World is an open source MMO RTS sandbox game for programming enthusiasts, wherein the core mechanic is programming your units AI. You control your colony by writing JavaScript which operates 24\/7 in the single persistent open world filled by other players on par with you.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/team-flashbang\/flashes\/games\/screeps:vanilla": "ghcr.io\/team-flashbang\/flashes\/games\/screeps:vanilla"
+    },
+    "file_denylist": [],
+    "startup": ".\/screeps-launcher",
+    "config": {
+        "files": "{\r\n    \"config.yml\": {\r\n        \"parser\": \"yaml\",\r\n        \"find\": {\r\n            \"env.backend.GAME_PORT\": \"{{server.build.default.port}}\",\r\n            \"env.backend.GAME_HOST\": \"0.0.0.0\",\r\n            \"steamKey\": \"{{env.STEAM_KEY}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Started\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\nexport TARGET=\/mnt\/server\r\nexport DOWNLOAD_URL=https:\/\/github.com\/screepers\/screeps-launcher\/releases\/download\/v1.14.0\/screeps-launcher_v1.14.0_linux_arm64\r\nexport DEBIAN_FRONTEND=noninteractive\r\n\r\n# download requirements...\r\napt update\r\napt install -y --no-install-recommends \\\r\n  ca-certificates \\\r\n  curl\r\n\r\n# link 'python' to 'python2'. Required to fix node-gyp\r\nln -s \/usr\/bin\/python2 \/usr\/bin\/python\r\n\r\n# download screeps-launcher\r\ncurl -L -o $TARGET\/screeps-launcher https:\/\/github.com\/screepers\/screeps-launcher\/releases\/download\/v1.14.0\/screeps-launcher_v1.14.0_linux_arm64\r\nchmod +x $TARGET\/screeps-launcher\r\n\r\n# write config\r\ncat <<EOT >> $TARGET\/config.yml\r\n# See: https:\/\/github.com\/screepers\/screeps-launcher\r\nsteamKey: <YourSteamKey>\r\nversion: latest\r\nmods:\r\n- screepsmod-auth\r\n- screepsmod-admin-utils\r\nbots:\r\n  simplebot: \"screepsbot-zeswarm\"\r\nserverConfig:\r\n  welcomeText:  |\r\n    <style>.screeps h1{  text-align: center; }<\/style>\r\n    <div class=\"screeps\">\r\n    <h1>Screeps<\/h1>\r\n    Welcome to my Screeps Server\r\n    <\/div>\r\n  tickRate: 1000\r\nEOT\r\n\r\necho \"Nice! A wild Screeps: World Server appeared.\"",
+            "container": "debian:bullseye",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Steam Web API Key",
+            "description": "The Steam API key is required for authentications. You can get your Key here: https:\/\/steamcommunity.com\/dev\/registerkey",
+            "env_variable": "STEAM_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        }
+    ]
+}
