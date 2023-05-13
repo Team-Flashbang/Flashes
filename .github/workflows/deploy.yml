@@ -52,6 +52,7 @@ jobs:
         image:
           - valheim:vanilla
           - core-keeper:vanilla
+          - screeps:vanilla
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
